@@ -1,45 +1,59 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import SearchBar from './components/SearchBar';
 import ItemList from './components/ItemList';
+import ListPanel from './components/ListPanel';
 import { items } from './data/items';
 
 function App() {
   // Estados
   const [myList, setMyList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  // Toggle inmutable: agrega si no está, quita si está
+  // Efecto: actualizar el título de la pestaña
+  useEffect(() => {
+    const appName = "Catamarca lee";
+    const total = myList.length;
+
+    document.title = total > 0
+      ? `Mi lista (${total}) | ${appName}`
+      : appName;
+  }, [myList]);  // ← Se ejecuta cuando myList cambia
+
+  // Toggle inmutable
   const handleToggle = (item) => {
     setMyList((prev) => {
       const yaEsta = prev.some((i) => i.id === item.id);
-
       return yaEsta
-        ? prev.filter((i) => i.id !== item.id)   // estaba , lo saco
-        : [...prev, item];                        // no estaba , lo agrego
+        ? prev.filter((i) => i.id !== item.id)
+        : [...prev, item];
     });
   };
 
-  // Input controlado para el buscador
+  const handleRemove = (item) => {
+    setMyList((prev) => prev.filter((i) => i.id !== item.id));
+  };
+
+  const handleOpenList = () => setIsPanelOpen(true);
+  const handleCloseList = () => setIsPanelOpen(false);
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  // Handler temporal para abrir el panel y mostrar algo
-  const handleOpenList = () => {
-    alert("Próximamente: panel de Mi lista");
-  };
-
-  // Dato derivado: filtrar libros por título o autor 
+  // Dato derivado
   const filteredItems = items.filter((item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.author.toLowerCase().includes(searchTerm.toLowerCase())
+    
+
   );
 
   return (
     <div className="min-h-screen bg-surface">
       <Navbar
-        logo="Mis Libros Catamarca"
+        logo="Catamarca lee"
         count={myList.length}
         onOpenList={handleOpenList}
       />
@@ -50,6 +64,14 @@ function App() {
         onToggle={handleToggle}
         searchTerm={searchTerm}
       />
+
+      {isPanelOpen && (
+        <ListPanel
+          myList={myList}
+          onClose={handleCloseList}
+          onRemove={handleRemove}
+        />
+      )}
     </div>
   );
 }
