@@ -5,23 +5,38 @@ import ItemList from './components/ItemList';
 import ListPanel from './components/ListPanel';
 import { items } from './data/items';
 
+const STORAGE_KEY = 'mislibros:lista';
+
 function App() {
-  // Estados
-  const [myList, setMyList] = useState([]);
+  const [myList, setMyList] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error('Error al leer localStorage:', error);
+      return [];
+    }
+  });
+
   const [searchTerm, setSearchTerm] = useState('');
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  // Efecto: actualizar el título de la pestaña
   useEffect(() => {
-    const appName = "Catamarca lee";
-    const total = myList.length;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(myList));
+    } catch (error) {
+      console.error('Error al guardar en localStorage:', error);
+    }
+  }, [myList]);
 
+  useEffect(() => {
+    const appName = "Mis Libros Catamarca";
+    const total = myList.length;
     document.title = total > 0
       ? `Mi lista (${total}) | ${appName}`
       : appName;
-  }, [myList]);  // ← Se ejecuta cuando myList cambia
+  }, [myList]);
 
-  // Toggle inmutable
   const handleToggle = (item) => {
     setMyList((prev) => {
       const yaEsta = prev.some((i) => i.id === item.id);
@@ -35,6 +50,14 @@ function App() {
     setMyList((prev) => prev.filter((i) => i.id !== item.id));
   };
 
+  const handleClear = () => {
+    const confirmado = confirm("¿Seguro que querés vaciar tu lista?");
+    if (confirmado) {
+      setMyList([]);
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  };
+
   const handleOpenList = () => setIsPanelOpen(true);
   const handleCloseList = () => setIsPanelOpen(false);
 
@@ -42,18 +65,15 @@ function App() {
     setSearchTerm(e.target.value);
   };
 
-  // Dato derivado
   const filteredItems = items.filter((item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.author.toLowerCase().includes(searchTerm.toLowerCase())
-    
-
   );
 
   return (
     <div className="min-h-screen bg-surface">
       <Navbar
-        logo="Catamarca lee"
+        logo="Mis Libros Catamarca"
         count={myList.length}
         onOpenList={handleOpenList}
       />
@@ -70,6 +90,7 @@ function App() {
           myList={myList}
           onClose={handleCloseList}
           onRemove={handleRemove}
+          onClear={handleClear}
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-function ListPanel({ myList, onClose, onRemove }) {
+function ListPanel({ myList, onClose, onRemove, onClear }) {
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex justify-end">
       <aside className="bg-white w-full max-w-md h-full flex flex-col shadow-xl">
@@ -20,14 +20,12 @@ function ListPanel({ myList, onClose, onRemove }) {
         {/* Contenido del panel */}
         <div className="flex-grow overflow-y-auto p-4">
           {myList.length === 0 ? (
-            // Empty state: lista vacía
             <div className="text-center py-20">
               <p className="text-lg text-gray-600">
                 Todavía no agregaste nada, buscá algo arriba 👆
               </p>
             </div>
           ) : (
-            // Lista de items
             <ul className="flex flex-col gap-3">
               {myList.map((item) => (
                 <li
@@ -51,6 +49,19 @@ function ListPanel({ myList, onClose, onRemove }) {
             </ul>
           )}
         </div>
+
+        {/* Footer del panel: botón vaciar (solo si hay items) */}
+        {myList.length > 0 && (
+          <footer className="p-4 border-t border-gray-200">
+            <button
+              type="button"
+              onClick={onClear}
+              className="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition-colors"
+            >
+              Vaciar mi lista
+            </button>
+          </footer>
+        )}
       </aside>
     </div>
   );
