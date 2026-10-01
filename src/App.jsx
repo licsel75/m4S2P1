@@ -6,6 +6,7 @@ import ListPanel from './components/ListPanel';
 import { items } from './data/items';
 import useMyList from './hooks/useMyList';
 import useToggle from './hooks/useToggle';
+
 import { APP_NAME } from './config';
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
   //  const appName = "Mis Libros Catamarca"; cambio de nombre 
     document.title = total > 0
       ? `Mi lista (${total}) | ${APP_NAME}`
-      : appName;
+      : APP_NAME;
   }, [total]);
 
   // Input controlado
