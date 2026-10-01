@@ -1,7 +1,6 @@
 import ItemCard from './ItemCard';
 
-function ItemList({ items, myList, onToggle, searchTerm }) {
-  // Empty state: búsqueda sin resultados
+function ItemList({ items, isInList, onToggle, searchTerm }) {
   if (items.length === 0) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-20 text-center">
@@ -16,19 +15,14 @@ function ItemList({ items, myList, onToggle, searchTerm }) {
   return (
     <section className="max-w-6xl mx-auto px-4 py-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {items.map((item) => {
-          // Dato derivado: ¿está en mi lista?
-          const isInList = myList.some((i) => i.id === item.id);
-
-          return (
-            <ItemCard
-              key={item.id}
-              item={item}
-              isInList={isInList}
-              onToggle={onToggle}
-            />
-          );
-        })}
+        {items.map((item) => (
+          <ItemCard
+            key={item.id}
+            item={item}
+            isInList={isInList(item)}
+            onToggle={onToggle}
+          />
+        ))}
       </div>
     </section>
   );

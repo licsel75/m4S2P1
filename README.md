@@ -1,16 +1,33 @@
-# React + Vite
+# Mis Libros Catamarca
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-Currently, two official plugins are available:
+## Qué es
+Una app de catálogo + lista personal de libros. Permite buscar libros, agregarlos a una lista personal, ver la lista en un panel, y persistir la lista en `localStorage` para que sobreviva al recargar la página.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Cómo correrlo
+```bash
+npm install
+npm run dev
 
-## React Compiler
+Uso de IA
+Herramientas que usé: ChatGPT para resolver dudas y guiarme en la estructura del proyecto.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Qué generé con IA: La estructura inicial del proyecto y algunas recetas de hooks.
 
-## Expanding the Oxlint configuration
+Qué escribí o corregí a mano: Todos los componentes (Navbar, SearchBar, ItemList, ItemCard, ListPanel), los hooks (useLocalStorage, useMyList, useToggle), la lógica de toggle inmutable, el filtro del buscador, los efectos, y los estilos con Tailwind.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Decisiones de estado
+myList: vive en useMyList (que usa useLocalStorage por dentro). Es el estado principal de la app.
+
+searchTerm: vive en App.jsx porque solo lo necesita el buscador y el filtro.
+
+isPanelOpen: vive en useToggle porque es un booleano que se abre y cierra.
+
+Datos derivados: filteredItems, isInList, total se calculan, no se guardan en estado.
+
+Lo que me costó
+Entender la diferencia entre un useEffect de carga y la inicialización lazy en useState. Al principio usaba un efecto para leer de localStorage, pero me di cuenta de que eso causaba una race condition que borraba la lista. Lo resolví usando inicialización lazy.
+
+Lo que se simplificó con el refactor
+App.jsx pasó de tener toda la lógica de localStorage y la lista a solo usar dos hooks (useMyList y useToggle). Ahora App.jsx es mucho más legible y la lógica está separada por responsabilidad. localStorage solo aparece en useLocalStorage.js.
+
