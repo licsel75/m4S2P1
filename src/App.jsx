@@ -6,6 +6,7 @@ import ListPanel from './components/ListPanel';
 import { items } from './data/items';
 import useMyList from './hooks/useMyList';
 import useToggle from './hooks/useToggle';
+import { APP_NAME } from './config';
 
 function App() {
   // Hook para la lista
@@ -19,9 +20,9 @@ function App() {
 
   // Efecto: título de la pestaña
   useEffect(() => {
-    const appName = "Mis Libros Catamarca";
+  //  const appName = "Mis Libros Catamarca"; cambio de nombre 
     document.title = total > 0
-      ? `Mi lista (${total}) | ${appName}`
+      ? `Mi lista (${total}) | ${APP_NAME}`
       : appName;
   }, [total]);
 
@@ -47,7 +48,7 @@ function App() {
   return (
     <div className="min-h-screen bg-surface">
       <Navbar
-        logo="Mis Libros Catamarca"
+        logo=  {APP_NAME}    
         count={total}
         onOpenList={openPanel}
       />

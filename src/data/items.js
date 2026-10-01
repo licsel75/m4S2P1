@@ -179,4 +179,13 @@ export const items = [
     rating: 4.6,
     isNew: false,
   },
+    {
+    id: 21,
+    title: "Mi planta de naranja lima",
+    author: "José Vasconcelos",
+    year: 2000,
+    category: "Literatura regional",
+    rating: 4.6,
+    isNew: false,
+  },
 ];
